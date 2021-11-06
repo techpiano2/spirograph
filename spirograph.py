@@ -117,7 +117,13 @@ def update(val):
     Function called on the update of any of the sliders, re-draws the image using the selected function
     :param val: The values of the sliders
     """
-    x, y = epi2_draw(k_slider.val, k2_slider.val, h_slider.val, p_slider.val, np.arange(0, tMax_slider.val, delta))
+    x, y = epi2_draw(
+        k_slider.val,
+        k2_slider.val,
+        h_slider.val,
+        p_slider.val,
+        np.arange(0, tMax_slider.val, delta),
+    )
 
     sp2.set_xdata(x)
     sp2.set_ydata(y)
