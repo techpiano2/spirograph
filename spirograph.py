@@ -43,6 +43,15 @@ def hipo_draw(k, k2, h, p):
     return x, y
 
 
+def hipo2_draw(k, k2, h, p):
+    r = R / k
+    r2 = r / k2
+    x = (R + r) * np.cos(t) - (r - r2) * np.cos(-t) + h * np.cos(t + r * t / r2)
+    y = (R + r) * np.sin(t) - (r - r2) * np.sin(-t) + h * np.sin(t + r * t / r2)
+    print(R, r, r2)
+    return x, y
+
+
 def epi_draw(k, k2, h, p):
     r = R / k
     x = (R + r) * np.cos(t) - h * np.cos(t + R * t / r)
@@ -64,15 +73,6 @@ def epi2_draw(k, k2, h, p):
         + (r + r2) * np.sin(t + (R * t) / r - R * t / (p * r))
         + h * np.sin(t + R * t / r - R * t / (p * r) - R * t / (p * r2))
     )
-    return x, y
-
-
-def hipo2_draw(k, k2, h, p):
-    r = R / k
-    r2 = r / k2
-    x = (R + r) * np.cos(t) - (r - r2) * np.cos(-t) + h * np.cos(t + r * t / r2)
-    y = (R + r) * np.sin(t) - (r - r2) * np.sin(-t) + h * np.sin(t + r * t / r2)
-    print(R, r, r2)
     return x, y
 
 
