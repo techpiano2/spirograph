@@ -1,15 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider
+from matplotlib.widgets import Slider, Button
 
 plt.style.use("dark_background")
 
-fig, ax = plt.subplots(figsize=(10, 5))
+figWidth = 15
+figHeight = 10
+fig, ax = plt.subplots(figsize=(figWidth, figHeight))
 plt.axis("off")
 
 ax.set_aspect("equal")
-ax.set_xlim([-500, 500])
-ax.set_ylim([-500, 500])
+pltLimit = 250
+ax.set_xlim([-pltLimit, pltLimit])
+ax.set_ylim([-pltLimit, pltLimit])
+ax.set_position([0, 0, figHeight/figWidth, 1])
 
 # Radius of the first circle, scales the whole image.
 R = 40
@@ -28,12 +32,12 @@ r2 = R / k2
 
 # Length of the spiral
 # High length can be difficult for the processor
-len = 200
+tRangeLen = 200
 # If you see dots, decrease delta.
 # Low delta can be difficult for the processor
 delta = 0.001
 
-tRange = np.arange(0, len, delta)
+tRange = np.arange(0, tRangeLen, delta)
 
 
 def hipo_draw(k, k2, h, p, t):
@@ -129,30 +133,49 @@ def update(val):
     sp2.set_ydata(y)
     fig.canvas.draw_idle()
 
+def reset(event):
+    h_slider.reset()
+    p_slider.reset()
+    k_slider.reset()
+    k2_slider.reset()
+    tMax_slider.reset()
+
 
 x, y = epi2_draw(k, k2, h, p, tRange)
 (sp2,) = ax.plot(x, y, linewidth=0.5, color="red", antialiased=True)
 
+# Slider Placement Values
+nSliders = 5
+sliderLeft = figHeight / figWidth
+sliderBottom = np.arange(0.25, 1.2, 0.15)
+sliderWidth = 0.9 * (figWidth - figHeight) / figWidth
+sliderHeight = 1 / (4 * nSliders)
 
-# Sliders
-h_ax = plt.axes([0.25, 0.09, 0.65, 0.01])
+# Slider Definitions
+h_ax = plt.axes([sliderLeft, sliderBottom[4], sliderWidth, sliderHeight])
 h_slider = Slider(h_ax, "h", valmin=0, valmax=200.0, valinit=h, valstep=1)
 h_slider.on_changed(update)
 
-p_ax = plt.axes([0.25, 0.07, 0.65, 0.01])
+p_ax = plt.axes([sliderLeft, sliderBottom[3], sliderWidth, sliderHeight])
 p_slider = Slider(p_ax, "p", valmin=-5, valmax=10.0, valinit=p, valstep=0.01)
 p_slider.on_changed(update)
 
-k_ax = plt.axes([0.25, 0.05, 0.65, 0.01])
+k_ax = plt.axes([sliderLeft, sliderBottom[2], sliderWidth, sliderHeight])
 k_slider = Slider(k_ax, "k", valmin=0, valmax=10.0, valinit=k, valstep=0.01)
 k_slider.on_changed(update)
 
-k2_ax = plt.axes([0.25, 0.03, 0.65, 0.01])
+k2_ax = plt.axes([sliderLeft, sliderBottom[1], sliderWidth, sliderHeight])
 k2_slider = Slider(k2_ax, "k2", valmin=0.1, valmax=10, valinit=k2, valstep=0.01)
 k2_slider.on_changed(update)
 
-tMax_ax = plt.axes([0.25, 0.01, 0.65, 0.01])
+tMax_ax = plt.axes([sliderLeft, sliderBottom[0], sliderWidth, sliderHeight])
 tMax_slider = Slider(tMax_ax, "t", valmin=0, valmax=500, valinit=tRange[-1], valstep=1)
 tMax_slider.on_changed(update)
+
+# Reset Button
+buttonWidth = 0.1
+resetAx = plt.axes([sliderLeft + sliderWidth / 2 - buttonWidth / 2, 0.1, buttonWidth, sliderHeight/1.5])
+resetSliders = Button(resetAx, 'Reset Sliders', color='#BB1000', hovercolor='0.5')
+resetSliders.on_clicked(reset)
 
 plt.show()
